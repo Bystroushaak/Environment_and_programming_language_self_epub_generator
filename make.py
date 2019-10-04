@@ -1,21 +1,25 @@
 #! /usr/bin/env python3
+import time
 import os.path
 import argparse
 
 import dhtmlparser
 from ebooklib import epub
 
+PROJECT_URL = "https://github.com/Bystroushaak/Environment_and_programming_language_self_epub_generator"
+
 
 class BookGenerator:
-    def __init__(self):
+    """
+    Just to keep track about chapters, automatically generate table of contents
+    and so on.
+    """
+    def __init__(self, title):
         self.book = epub.EpubBook()
-        self.title = 'Environment and the programming language Self'
+        self.title = title
         self.chapters = []
 
-        # book.set_identifier('id123456')
         self.book.set_title(self.title)
-        self.book.set_language('en')
-        self.book.add_author('Bystroushaak')
 
     def generate_ebook(self, path):
         self._add_css()
@@ -23,12 +27,21 @@ class BookGenerator:
 
         epub.write_epub(path, self.book, {})
 
+    def set_language(self, lang):
+        return self.book.set_language(lang)
+
+    def add_metadata(self, namespace, name, value, others=None):
+        return self.book.add_metadata(namespace, name, value, others)
+
     def add_chapter(self, chapter):
         self.book.add_item(chapter)
         self.chapters.append(chapter)
 
     def add_image(self, image):
         self.book.add_item(image)
+
+    def add_author(self, author):
+        self.book.add_author(author)
 
     def _add_toc(self):
         self.book.toc = (
@@ -57,7 +70,14 @@ class BookGenerator:
 class EAPLSEpub:
     def __init__(self, html_root):
         self.html_root = html_root
-        self.book = BookGenerator()
+        self.book = BookGenerator('Environment and the programming language Self')
+
+        self.book.add_author('Bystroushaak')
+        self.book.set_language('en')
+        self.book.add_metadata('DC', 'date', "2019-10-04")
+        self.book.add_metadata('DC', 'rights', "Creative Commons BY-NC-SA")
+        self.book.add_metadata('DC', 'generator', '', {'name': 'generator',
+                                                       'content': PROJECT_URL})
 
         self.add_foreword()
 
@@ -85,9 +105,9 @@ class EAPLSEpub:
 want to improve the quality, your contribution is most welcomed:<p>
 
 <ul>
-    <li><a href="https://github.com/Bystroushaak/Environment_and_programming_language_self_epub_generator">https://github.com/Bystroushaak/Environment_and_programming_language_self_epub_generator</a></li>
+    <li><a href="%s">%s</a></li>
 </ul> 
-        """
+        """ % (PROJECT_URL, PROJECT_URL)
         self.book.add_chapter(chapter)
 
     def convert_chapter(self, article_path, chapter_fn, title=None):
