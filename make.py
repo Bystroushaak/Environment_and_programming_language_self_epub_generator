@@ -85,7 +85,7 @@ class EAPLSEpub:
 want to improve the quality, your contribution is most welcomed:<p>
 
 <ul>
-    <li><a href=""></a></li>
+    <li><a href="https://github.com/Bystroushaak/Environment_and_programming_language_self_epub_generator">https://github.com/Bystroushaak/Environment_and_programming_language_self_epub_generator</a></li>
 </ul> 
         """
         self.book.add_chapter(chapter)
